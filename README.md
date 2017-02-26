@@ -1,4 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/KodrAus/tantivy-cli.svg?branch=master)](https://travis-ci.org/KodrAus/tantivy-cli)
 ![beacon for google analytics](https://ga-beacon.appspot.com/UA-88834340-1/tantivy-cli/README)
 
 
