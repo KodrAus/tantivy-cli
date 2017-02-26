@@ -1,0 +1,96 @@
+# Based on the "trust" template v0.1.1
+# https://github.com/japaric/trust/tree/v0.1.1
+
+dist: trusty
+language: rust
+services: docker
+sudo: required
+
+rust: nightly
+
+env:
+  global:
+    - CRATE_NAME=tantivy-cli
+    - TARGET=x86_64-unknown-linux-gnu
+
+matrix:
+  include:
+    # Linux
+    - env: TARGET=i686-unknown-linux-gnu
+    - env: TARGET=i686-unknown-linux-musl
+    # - env: TARGET=x86_64-unknown-linux-gnu  # this is the default job
+    - env: TARGET=x86_64-unknown-linux-musl
+
+    # OSX
+    - env: TARGET=i686-apple-darwin
+      os: osx
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+
+    # *BSD
+    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+
+    # Other architectures
+    - env: TARGET=aarch64-unknown-linux-gnu
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+    - env: TARGET=mips-unknown-linux-gnu
+    - env: TARGET=mips64-unknown-linux-gnuabi64
+    - env: TARGET=mips64el-unknown-linux-gnuabi64
+    - env: TARGET=mipsel-unknown-linux-gnu
+    - env: TARGET=powerpc-unknown-linux-gnu
+    - env: TARGET=powerpc64-unknown-linux-gnu
+    - env: TARGET=powerpc64le-unknown-linux-gnu
+    - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+
+    # Testing other channels
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+      rust: nightly
+
+before_install: set -e
+
+install:
+  - sh ci/install.sh
+  - source ~/.cargo/env || true
+
+script:
+  - bash ci/script.sh
+
+after_script: set +e
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+deploy:
+  # TODO update `api_key.secure`
+  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
+  # - Encrypt it: `travis encrypt YOUR_TOKEN`
+  # - Paste the output down here
+  api_key:
+    secure: p8O70l8Q043YZ8VCt1fV3H7VmPtOkbPxA5zW2i5E0N5nsO2WoO15ij6q5H7+tshch+WYIfMNqevx5GB20KX7sXVlziaa6tbaPrkrdd6wu7NmvQLdX2b5ezUfa82FAjDXbCexNSnvK4dz205LbK8HwcV01pcEcwGYRPj1r1+pHrPr/A35xpE/6V2jmR9SOlYRqfwG/RGvRjxHsu5vfuyZeZCnfuMdhPsU2886RjgTou1yaNO6d12xAezpLBWhOEICU+goSaLMPs8Pxjgu7NQLqakrEdKJQc4yz0AsoYzRA/JkZaycYfEw46oE2mzXZyTmCMsqoDl4cBTescWOu21AgUC480LCrN0qbMLhmmyA1Q/htrcJXcIX9fSSyCJOyIJK+jKFfS5rjYLWMgaqUlQ3/B8qTLLzxZ0qQ/44I5aZNHgiogZP61uFL5mPlqR/dwsUu3RDR9muoPA5Td4rjphV1gfouzKpiKOMZlXaQzgAiGtZs3Mr5qx3F9RYkxax2eFEd87ZR+d/BoD2bh1hZuxwMz4r20m2H0Q7W0/0PjFbsLNKKOLa7NqyoBwZc6vqaNmEdanm8G/dX/9xjdmUp2+jOxFKwUOtr2GWYmW8nfEbdd8VqM5n1LpFd8IMhq7V2PAiAFp10k6twbM1TBbpga3gPYvs50LyUQxg4NanBU6GOvY=
+  file_glob: true
+  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  on:
+    condition: $TRAVIS_RUST_VERSION = nightly
+    tags: true
+  provider: releases
+  skip_cleanup: true
+
+cache: cargo
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - master
+
+notifications:
+  email:
+    on_success: never
