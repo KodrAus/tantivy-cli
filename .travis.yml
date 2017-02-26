@@ -89,6 +89,7 @@ branches:
   only:
     # release tags
     - /^v\d+\.\d+\.\d+.*$/
+    - ci/trust
     - master
 
 notifications:
