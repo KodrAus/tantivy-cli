@@ -1,3 +1,5 @@
+# TODO: See https://github.com/rust-lang-nursery/rustup.rs/issues/268#issuecomment-282526696
+
 set -ex
 
 main() {
