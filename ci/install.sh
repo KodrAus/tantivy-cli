@@ -6,12 +6,9 @@ main() {
     curl https://sh.rustup.rs -sSf | \
         sh -s -- -y --default-toolchain $TRAVIS_RUST_VERSION
 
-    local target=
     if [ $TRAVIS_OS_NAME = linux ]; then
-        target=x86_64-unknown-linux-gnu
         sort=sort
     else
-        target=x86_64-apple-darwin
         sort=gsort  # for `sort --sort-version`, from brew's coreutils.
     fi
 
@@ -27,12 +24,12 @@ main() {
            --force \
            --git japaric/cross \
            --tag $tag \
-           --target $target
+           --target $TARGET
 
     # Build a custom container if specified
-    local dockerdir="./ci/$target"
+    local dockerdir="./ci/$TARGET"
     if [ -d "$dockerdir" ]; then
-      docker build -t tantivy-cli-$target:latest $dockerdir
+      docker build -t tantivy-cli-$TARGET:latest $dockerdir
     fi
 }
 
