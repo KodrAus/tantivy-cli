@@ -32,6 +32,8 @@ version = "2"
 
 [dependencies.tantivy]
 version = "0.2.0"
+git = "https://github.com/KodrAus/tantivy.git"
+branch = "feat/no-cpp"
 features = []
 default-features = false
 
