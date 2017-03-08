@@ -11,8 +11,8 @@ rust: nightly
 env:
   global:
     - CRATE_NAME=tantivy-cli
-    # Default: Linux
-    - TARGET=x86_64-unknown-linux-musl
+      # Default: Linux
+      TARGET=x86_64-unknown-linux-musl
 
 matrix:
   include:
