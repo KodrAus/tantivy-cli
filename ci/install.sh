@@ -28,6 +28,12 @@ main() {
            --git japaric/cross \
            --tag $tag \
            --target $target
+
+    # Build a custom container if specified
+    local dockerdir="./ci/$target"
+    if [ -d "$dockerdir" ]; then
+      docker build -t tantivy-cli-$target:latest $dockerdir
+    fi
 }
 
 main

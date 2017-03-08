@@ -10,22 +10,8 @@ rust: nightly
 
 env:
   global:
-    - CC=gcc-4.8
-    - CXX=g++-4.8
     - CRATE_NAME=tantivy-cli
     - TARGET=x86_64-unknown-linux-gnu
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.8
-      - g++-4.8
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
 
 matrix:
   include:
